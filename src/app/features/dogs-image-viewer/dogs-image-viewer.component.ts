@@ -9,7 +9,7 @@ import { GetDogsService } from './get-dogs.service';
       <h1>Dogs Image Viewer</h1>
       <button (click)="loadRandomDogImage()">Load Random Dog Image</button>
       <ul class="dog-image-list">
-        @for (imageUrl of dogsImages; track $index) {
+        @for (imageUrl of dogsImages(); track $index) {
         <li>
           <img class="dog-image" [src]="imageUrl" alt="Dog Image" />
         </li>
@@ -45,13 +45,13 @@ import { GetDogsService } from './get-dogs.service';
 export class DogsImageViewerComponent {
   private getDogs = inject(GetDogsService);
 
-  dogsImages: string[] = [];
+  dogsImages = signal<string[]>([]);
 
   ngOnInit(): void {
     this.loadRandomDogImage();
   }
 
   async loadRandomDogImage() {
-    this.dogsImages = await this.getDogs.getRandomDogImages();
+    this.dogsImages.set(await this.getDogs.getRandomDogImages());
   }
 }
